@@ -1,0 +1,36 @@
+name: Deploy Lambda
+
+on:
+  push:
+    branches:
+      - main # O la rama que uses
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11' # O la versión que uses
+          distribution: 'temurin'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # Tu región
+
+      - name: Build and package
+        run: mvn package shade:shade -Dmaven.test.skip=true
+
+      - name: Upload to S3
+        run: aws s3 cp target/UpdateInventory-0.0.1-SNAPSHOT-lambda-package.zip s3://test-devops-alejjandrodev/lambda.zip
+
+      - name: Update Lambda function
+        run: aws lambda update-function-code --function-name test4  --s3-bucket test-devops-alejjandrodev --s3-key lambda.jar --publish
