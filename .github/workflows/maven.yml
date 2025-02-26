@@ -27,7 +27,7 @@ jobs:
           aws-region: us-east-1 # Tu región
 
       - name: Build and package
-        run: mvn package shade:shade -Dmaven.test.skip=true
+        run: mvn clean package
 
       - name: Upload to S3
         run: aws s3 cp target/UpdateInventory-0.0.1-SNAPSHOT-lambda-package.zip s3://test-devops-alejjandrodev/lambda.zip
