@@ -33,4 +33,4 @@ jobs:
         run: aws s3 cp target/UpdateInventory-0.0.1-SNAPSHOT-lambda-package.zip s3://test-devops-alejjandrodev/lambda.zip
 
       - name: Update Lambda function
-        run: aws lambda update-function-code --function-name test4  --s3-bucket test-devops-alejjandrodev --s3-key lambda.jar --publish
+        run: aws lambda update-function-code --function-name test4  --s3-bucket test-devops-alejjandrodev --s3-key lambda.zip --publish
